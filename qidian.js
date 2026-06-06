@@ -6,7 +6,8 @@
 // @author       xwt
 // @match        https://www.qidian.com/chapter/*/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=qidian.com
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
 // ==/UserScript==
 
 (function () {
@@ -18,7 +19,8 @@
 })();
 
 function download_chapter() {
-    var cid = window.location.href.slice(42, 51);
+    var re = new RegExp('https://www.qidian.com/chapter/(\\d+)/(\\d+)/');
+    var cid = re.exec(window.location.href)[2];
     var a = document.getElementById(`c-${cid}`);
     if (a == null) {
         a = document.getElementById(`c-${cid}`);
@@ -28,7 +30,11 @@ function download_chapter() {
     review.forEach(r => {
         r.remove();
     });
-    download(document.title, a.innerText);
+    var bid = re.exec(window.location.href)[1];
+    var count_key = `qidian_bid_${bid}`;
+    var count = GM_getValue(count_key, 1);
+    download(`_${count}_${document.title}`, a.innerText);
+    GM_setValue(count_key, count + 1);
     clearInterval(window.loop);
     var next_page = document.getElementsByClassName("nav-btn");
     next_page[next_page.length - 1].click();
