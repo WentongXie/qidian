@@ -22,6 +22,7 @@ def common(name: str) -> int:
     match = re.compile(r"_(\d+)_").search(name)
     if match:
         return int(match.group(1))
+    logging.warning("sort func do not match, name: {}".format(name))
     return float('inf')
 
 def get_chapter_title(file_path: str, folder: str) -> str:
@@ -53,7 +54,8 @@ def merge_txt_files(folder: str, output_file: str, sort_func: function) -> None:
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    merge_txt_files("剑烛大荒", "剑烛大荒.txt", common)
+    folder_name = "绍宋"
+    merge_txt_files(folder_name, "{}.txt".format(folder_name), common)
     pass
 
 
