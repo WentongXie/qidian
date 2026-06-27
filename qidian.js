@@ -17,11 +17,18 @@
     var match = bidPageRe.exec(window.location.href);
     if (match) {
         initBidInput(match);
+        return;
     }
     var chapter_re = new RegExp('https://www.qidian.com/chapter/(\\d+)/(\\d+)/');
     match = chapter_re.exec(window.location.href);
     if (match) {
-        window.loop = setInterval(download_chapter, 3000, match);;
+        var bid = match[1];
+        var enableKey = `qidian_bid_download_enable_${bid}`;
+        var enabled = GM_getValue(enableKey, false);
+        if (enabled) {
+            window.loop = setInterval(download_chapter, 3000, match);
+        }
+        return;
     }
     var lastpage_re = new RegExp('https://www.qidian.com/lastpage/(\\d+)/');
     match = lastpage_re.exec(window.location.href);
@@ -29,6 +36,8 @@
         var bid = match[1];
         var enableKey = `qidian_bid_download_enable_${bid}`;
         GM_setValue(enableKey, false);
+        clearInterval(window.loop);
+        return;
     }
 
 })();
@@ -75,15 +84,9 @@ function initBidInput(match) {
 
 function download_chapter(match) {
     var bid = match[1];
-    var enableKey = `qidian_bid_download_enable_${bid}`;
-    var enabled = GM_getValue(enableKey, false);
-    if (!enabled) {
-        return;
-    }
     var cid = match[2];
     var a = document.getElementById(`c-${cid}`);
     if (a == null) {
-        a = document.getElementById(`c-${cid}`);
         return;
     }
     var review = a.querySelectorAll('span[class="review"]');
