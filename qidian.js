@@ -22,9 +22,9 @@
     var chapter_re = new RegExp('https://www.qidian.com/chapter/(\\d+)/(\\d+)/');
     match = chapter_re.exec(window.location.href);
     if (match) {
-        var bid = match[1];
-        var enableKey = `qidian_bid_download_enable_${bid}`;
-        var enabled = GM_getValue(enableKey, false);
+        let bid = match[1];
+        let enableKey = `qidian_bid_download_enable_${bid}`;
+        let enabled = GM_getValue(enableKey, false);
         if (enabled) {
             window.loop = setInterval(download_chapter, 3000, match);
         }
@@ -33,8 +33,8 @@
     var lastpage_re = new RegExp('https://www.qidian.com/lastpage/(\\d+)/');
     match = lastpage_re.exec(window.location.href);
     if (match) {
-        var bid = match[1];
-        var enableKey = `qidian_bid_download_enable_${bid}`;
+        let bid = match[1];
+        let enableKey = `qidian_bid_download_enable_${bid}`;
         GM_setValue(enableKey, false);
         clearInterval(window.loop);
         return;
